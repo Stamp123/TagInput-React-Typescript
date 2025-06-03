@@ -1,36 +1,46 @@
 import { useRef, useState } from "react";
 
-const TagInput = () => {
-  const maxTagLength = 5;
+interface TagInputProps {
+  arrayData: string[];
+  setArrayData: React.Dispatch<React.SetStateAction<string[]>>;
+  maxTagLength: number;
+  placeholder?: string;
+  separators?: string[];
+}
+
+
+const TagInput = (props: TagInputProps) => {
+
   const tagInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [tagInput, setTagInput] = useState("");
-  const [arrayData, setArrayData] = useState<string[]>([]);
   const [isFocused, setIsFocused] = useState(false);
 
   const CheckSomeMaxTag = (textTag: string) => {
-    const checkSome = arrayData.some((item) => item === textTag);
-    const CheckSomeMaxTag = arrayData.length < maxTagLength;
-    if(!checkSome && CheckSomeMaxTag){
-      setArrayData((prevArray) => [...prevArray, textTag]);
+    const trimmedTextTag = textTag.trim();
+    const checkSome = props.arrayData.some((item) => item === trimmedTextTag);
+    const CheckSomeMaxTag = props.arrayData.length < props.maxTagLength;
+    if(!checkSome && CheckSomeMaxTag && trimmedTextTag) {
+      props.setArrayData((prevArray) => [...prevArray, textTag]);
       setTagInput("");
     } else {
       setTagInput("");
     }
   };
 
-  const handleChange = (e: any) => {
-    if (e.key === "Enter" || e.key === ",") {
+  const handleChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const checkSeparator = props.separators?.some((item) => item === e.key);
+    if (checkSeparator) {
       e.preventDefault();
       CheckSomeMaxTag(tagInput)
-    }
+    } 
   };
 
   const handleDelete = (index: number) => {
-    const updatedArray = [...arrayData];
+    const updatedArray = [...props.arrayData];
     updatedArray.splice(index, 1);
-    setArrayData(updatedArray);
+    props.setArrayData(updatedArray);
   };
 
   const handleClick = () => {
@@ -45,18 +55,18 @@ const TagInput = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-start h-screen w-screen px-110">
-      <h1 className="text-lg font-medium mb-2">Tag Input</h1>
+    <div className="flex flex-col justify-center items-start h-screen w-screen md:px-40 sm:px-10">
+      <h1 className="text-lg font-medium mb-2">Press Enter or Blur ( if the value is valid )</h1>
       <div
         ref={containerRef}
         onClick={handleClick}
         className={` ${
           isFocused
-            ? "border-yellow-500 ring-1 ring-yellow-500"
+            ? "border-red-500 ring-1 ring-red-500"
             : "border-gray-300"
         } flex flex-wrap gap-1 w-full border rounded px-3 py-2 bg-white cursor-text`}
       >
-        {arrayData.map((item, index) => (
+        {props.arrayData.map((item, index) => (
           <div
             key={index}
             className="flex gap-1 pl-3 text-gray-800 items-center bg-gray-300 rounded"
@@ -70,7 +80,7 @@ const TagInput = () => {
         <input
           ref={tagInputRef}
           type="text"
-          placeholder={arrayData.length === 0 ? "Placeholder" : ""}
+          placeholder={props.arrayData.length === 0 ? props.placeholder : ""}
           value={tagInput}
           className="border-white border-2 flex-1 min-w-[120px] outline-none bg-transparent text-gray-900 placeholder-gray-400"
           onChange={(e) => setTagInput(e.target.value)}
@@ -79,9 +89,7 @@ const TagInput = () => {
           onFocus={() => setIsFocused(true)}
         />
       </div>
-      {/* {arrayData.length === maxTagLength && (
-        <p className="text-red-400">จํานวน Tag ไม่เกิน {maxTagLength} Tag</p>
-      )} */}
+        <p className="text-red-400">จำนวน Tag ไม่เกิน {props.arrayData.length} / {props.maxTagLength} Tag</p>  
     </div>
   );
 };
