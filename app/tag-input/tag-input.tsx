@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 interface TagInputProps {
   arrayData: string[];
   setArrayData: React.Dispatch<React.SetStateAction<string[]>>;
-  maxTagLength: number;
+  maxTagLength: number | undefined;
   placeholder?: string;
   separators?: string[];
 }
@@ -20,7 +20,7 @@ const TagInput = (props: TagInputProps) => {
   const CheckSomeMaxTag = (textTag: string) => {
     const trimmedTextTag = textTag.trim();
     const checkSome = props.arrayData.some((item) => item === trimmedTextTag);
-    const CheckSomeMaxTag = props.arrayData.length < props.maxTagLength;
+    const CheckSomeMaxTag = props.arrayData.length < (props.maxTagLength ?? Infinity);
     if(!checkSome && CheckSomeMaxTag && trimmedTextTag) {
       props.setArrayData((prevArray) => [...prevArray, textTag]);
       setTagInput("");
@@ -31,7 +31,7 @@ const TagInput = (props: TagInputProps) => {
 
   const handleChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const checkSeparator = props.separators?.some((item) => item === e.key);
-    if (checkSeparator) {
+    if (checkSeparator || e.key === "Enter") {
       e.preventDefault();
       CheckSomeMaxTag(tagInput)
     } 
@@ -55,8 +55,7 @@ const TagInput = (props: TagInputProps) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-start h-screen w-screen md:px-40 sm:px-10">
-      <h1 className="text-lg font-medium mb-2">Press Enter or Blur ( if the value is valid )</h1>
+    <div>
       <div
         ref={containerRef}
         onClick={handleClick}
