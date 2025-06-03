@@ -55,20 +55,16 @@ const TagInput = (props: TagInputProps) => {
   };
 
   return (
-    <div>
+    <div className="w-full mb-7">
       <div
         ref={containerRef}
         onClick={handleClick}
-        className={` ${
-          isFocused
-            ? "border-red-500 ring-1 ring-red-500"
-            : "border-gray-300"
-        } flex flex-wrap gap-1 w-full border rounded px-3 py-2 bg-white cursor-text`}
+        className={`w-full p-4 border-2 ${isFocused ? "border-green-400 shadow-lg" : ""} border-gray-200 rounded-xl text-lg transition-all duration-300`}
       >
-        {props.arrayData.map((item, index) => (
+        {props.arrayData.map((item: string, index: number) => (
           <div
             key={index}
-            className="flex gap-1 pl-3 text-gray-800 items-center bg-gray-300 rounded"
+            className={`${index === props.arrayData.length - 1 ? "mt-3" : "mt-0"} inline-flex mr-2 items-center px-3 py-1 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full text-xs font-medium shadow-sm`}
           >
             <p>{item}</p>
             <button className="p-2" onClick={() => handleDelete(index)}>
@@ -86,9 +82,14 @@ const TagInput = (props: TagInputProps) => {
           onKeyDown={handleChange}
           onBlur={handleInputBlur}
           onFocus={() => setIsFocused(true)}
+
         />
       </div>
-        <p className="text-red-400">จำนวน Tag ไม่เกิน {props.arrayData.length} / {props.maxTagLength} Tag</p>  
+        {props.maxTagLength && (
+        <div className="absolute -bottom-8 right-0 text-lg text-gray-500">
+          {props.arrayData.length}/{props.maxTagLength} tags
+        </div>
+      )}
     </div>
   );
 };
