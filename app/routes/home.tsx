@@ -42,10 +42,10 @@ export default function Home() {
                 <input
                   type="number"
                   value={maxTagLength}
-                  onChange={(e) => setMaxTagLength(Number(e.target.value))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setMaxTagLength(Number(e.target.value))
+                  }
                   className={`w-full p-4 border-2 rounded-xl text-lg font-medium transition-all duration-300 bg-white border-gray-200 text-gray-800 focus:border-yellow-400 focus:shadow-lg`}
-                     
-           
                   min={1}
                 />
               </div>
@@ -74,7 +74,7 @@ export default function Home() {
                   ตัวแยกปัจจุบัน:
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {separatorInput.map((sep, index) => (
+                  {separatorInput.map((sep: string, index: number) => (
                     <span
                       key={index}
                       className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-green-500 to-yellow-500 text-white rounded-full text-xs font-medium shadow-sm"
@@ -90,7 +90,6 @@ export default function Home() {
               <label className="text-xl font-semibold text-gray-800 flex items-center gap-2">
                 Tag Input
               </label>
-
               <div className="relative">
                 <TagInput
                   arrayData={arrayData}
