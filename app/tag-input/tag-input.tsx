@@ -8,9 +8,7 @@ interface TagInputProps {
   separators?: string[];
 }
 
-
 const TagInput = (props: TagInputProps) => {
-
   const tagInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -20,8 +18,9 @@ const TagInput = (props: TagInputProps) => {
   const CheckSomeMaxTag = (textTag: string) => {
     const trimmedTextTag = textTag.trim();
     const checkSome = props.arrayData.some((item) => item === trimmedTextTag);
-    const CheckSomeMaxTag = props.arrayData.length < (props.maxTagLength ?? Infinity);
-    if(!checkSome && CheckSomeMaxTag && trimmedTextTag) {
+    const CheckSomeMaxTag =
+      props.arrayData.length < (props.maxTagLength ?? Infinity);
+    if (!checkSome && CheckSomeMaxTag && trimmedTextTag) {
       props.setArrayData((prevArray) => [...prevArray, textTag]);
       setTagInput("");
     } else {
@@ -33,8 +32,8 @@ const TagInput = (props: TagInputProps) => {
     const checkSeparator = props.separators?.some((item) => item === e.key);
     if (checkSeparator || e.key === "Enter") {
       e.preventDefault();
-      CheckSomeMaxTag(tagInput)
-    } 
+      CheckSomeMaxTag(tagInput);
+    }
   };
 
   const handleDelete = (index: number) => {
@@ -50,7 +49,7 @@ const TagInput = (props: TagInputProps) => {
   const handleInputBlur = () => {
     setIsFocused(false);
     if (tagInput.trim()) {
-       CheckSomeMaxTag(tagInput)
+      CheckSomeMaxTag(tagInput);
     }
   };
 
@@ -59,12 +58,14 @@ const TagInput = (props: TagInputProps) => {
       <div
         ref={containerRef}
         onClick={handleClick}
-        className={`w-full p-4 border-2 ${isFocused ? "border-green-400 shadow-lg" : ""} border-gray-200 rounded-xl text-lg transition-all duration-300`}
+        className={`w-full p-4 border-2 ${
+          isFocused ? "border-green-400 shadow-lg" : ""
+        } border-gray-200 rounded-xl text-lg transition-all duration-300`}
       >
         {props.arrayData.map((item: string, index: number) => (
           <div
             key={index}
-            className={`${index === props.arrayData.length - 1 ? "mt-3" : "mt-0"} inline-flex mr-2 items-center px-3 py-1 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full text-xs font-medium shadow-sm`}
+            className="inline-flex mr-2 items-center px-3 bg-gradient-to-r from-green-500 to-yellow-500 text-white rounded-full text-xs font-medium shadow-sm mb-1"
           >
             <p>{item}</p>
             <button className="p-2" onClick={() => handleDelete(index)}>
@@ -82,10 +83,9 @@ const TagInput = (props: TagInputProps) => {
           onKeyDown={handleChange}
           onBlur={handleInputBlur}
           onFocus={() => setIsFocused(true)}
-
         />
       </div>
-        {props.maxTagLength && (
+      {props.maxTagLength && (
         <div className="absolute -bottom-8 right-0 text-lg text-gray-500">
           {props.arrayData.length}/{props.maxTagLength} tags
         </div>
